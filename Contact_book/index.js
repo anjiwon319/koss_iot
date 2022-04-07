@@ -2,6 +2,7 @@ var express = require('express');
 var mongoose = require('mongoose');
 var app = express();
 var bodyParser = require('body-parser');
+var methodOverride = require('method-override');
 
 // DB setting
 mongoose.connect(process.env.MONGO_DB);
@@ -18,6 +19,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname+'/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
+app.use(methodOverride('_method'));
 
 // DB schema
 var contactSchema = mongoose.Schema({
@@ -51,6 +53,39 @@ app.get('/contacts/new', function(req, res){
 // Contacts - create : db에 data 생성
 app.post('/contacts', function(req, res){
   Contact.create(req.body, function(err, contact){
+    if(err) return res.json(err);
+    res.redirect('/contacts');
+  });
+});
+
+// Contacts - show - findOnev : {} 조건에 해당하는 인스턴스 return
+app.get('/contacts/:id', function(req, res){
+  Contact.findOne({_id:req.params.id}, function(err, contact){
+    if(err) return res.json(err);
+    res.render('contacts/show', {contact:contact});
+  });
+});
+
+// Contacts - edit
+app.get('/contacts/:id/edit', function(req, res){
+  Contact.findOne({_id:req.params.id}, function(err, contact){
+    if(err) return res.json(err);
+    res.render('contacts/edit', {contact:contact});
+  });
+});
+
+// Contacts - update
+app.put('/contacts/:id', function(req, res){
+  Contact.findOneAndUpdate({_id:req.params.id}, req.body, function(err, contact){
+    console.log(req.body);
+    if(err) return res.json(err);
+    res.redirect('/contacts/'+req.params.id);
+  });
+});
+
+// Contacts - delete
+app.delete('/contacts/:id', function(req, res){
+  Contact.deleteOne({_id:req.params.id}, function(err){
     if(err) return res.json(err);
     res.redirect('/contacts');
   });
