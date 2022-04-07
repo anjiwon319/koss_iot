@@ -15,7 +15,9 @@
     "method-override": "^3.0.0",
     "mongoose": "^6.2.10"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "dotenv": "^16.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/a-mean-blogger/contact-book.git"
