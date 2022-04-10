@@ -1,4 +1,4 @@
-const mongoose = reqiure("mongoose");
+const mongoose = require("mongoose");
 const { Schema } = mongoose; // 기존 문법 const Schema = mongoose.Schema 문법의 축약형
 
 const userSchema = new Schema(
@@ -18,5 +18,5 @@ const userSchema = new Schema(
         timestamps: true,
     }
 );
-module.exports = mongoose.module("User", userSchema)
+module.exports = mongoose.model("user", userSchema);
 
